@@ -1,6 +1,6 @@
 import express from "express";
-import { getTest } from "../controllers/testController";
+import { ping } from "../controllers/pingController";
 
 export const testRouter = express.Router();
 
-testRouter.get("/", getTest);
+testRouter.get("/", ping);

@@ -8,6 +8,10 @@ dotenv.config();
 const app: express.Express = express();
 const port = process.env.PORT || "3000";
 
+// middleware
+app.use(express.json());
+
+// routers
 app.use("/api/test", testRouter);
 app.use("/api/messages", messagesRouter);
 

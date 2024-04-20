@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { getMessages } from "../controllers/messagesController"
+import * as messagesController from "../controllers/messagesController"
 
 export const messagesRouter = Router();
 
-messagesRouter.get('/:user1/:user2', getMessages);
+messagesRouter.get("/:user1Id/:user2Id", messagesController.getMessages);
+
+messagesRouter.post("/", messagesController.addMessage);
