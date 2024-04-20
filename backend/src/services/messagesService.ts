@@ -18,6 +18,12 @@ export const getMessagesBetweenUsers = async (userId1: number, userId2: number):
     ])).execute();
 }
 
+export const getSingleMessage = async (messageId: number): Promise<Message> => {
+    return await db.selectFrom("messages").selectAll()
+    .where("id", "=", messageId)
+    .executeTakeFirstOrThrow()
+}
+
 export const addMessage = async (senderId: number, recipientId: number, messageContent: string) => {
 
     // INSERT INTO messages (sender_id, recipient_id, content) VALUES ($1, $2, $3)
@@ -28,5 +34,5 @@ export const addMessage = async (senderId: number, recipientId: number, messageC
         content: messageContent
     })
     .returning("id")
-    .executeTakeFirst()
+    .executeTakeFirstOrThrow()
 }

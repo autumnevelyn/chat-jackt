@@ -4,11 +4,22 @@ import { NewMessage } from "../types";
 
 
 export const getMessages: RequestHandler = async (req, res, next) => {
-    const {userId1, userId2} = req.params;
+    const { userId1, userId2 } = req.params;
 
     try {
       const messages = await messagesService.getMessagesBetweenUsers(parseInt(userId1), parseInt(userId2));
       res.json(messages);
+    } catch (error){
+      next(error);
+    }
+}
+
+export const getMessage: RequestHandler = async (req, res, next) => {
+    const { messageId } = req.params;
+
+    try {
+      const message = await messagesService.getSingleMessage(parseInt(messageId));
+      res.json(message);
     } catch (error){
       next(error);
     }
