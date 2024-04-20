@@ -1,25 +1,32 @@
-import { query } from "../db/db";
+import { db } from "../db";
+import { NewMessage, Message, MessageUpdate } from "../types";
 
-interface Message {
-    id: number;
-    senderId: string;
-    recipientId: string;
-    messageContent: string;
-    createdAt: Date;
-  }
 
-export const getMessagesBetweenUsers = async (user1Id: string, user2Id: string): Promise<Message[]> => {
-    const result = await query(
-        "SELECT * FROM messages WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1)", 
-        [user1Id, user2Id]
-    );
-
-    return result.rows;
+export const getMessagesBetweenUsers = async (userId1: number, userId2: number): Promise<Message[]> => {
+    
+    // SELECT * FROM messages WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1)
+    return await db.selectFrom("messages").selectAll()
+    .where((w) => w.or([
+        w.and([
+            w("sender_id", "=", userId1),
+            w("recipient_id", "=", userId2)
+        ]),
+        w.and([
+            w("sender_id", "=", userId2),
+            w("recipient_id", "=", userId1)
+        ])
+    ])).execute();
 }
 
-export const addMessage = async (senderId: string, recipientId: string, messageContent: string) => {
-    const result = await query(
-        "INSERT INTO messages (sender_id, recipient_id, content) VALUES ($1, $2, $3)", 
-        [senderId, recipientId, messageContent]
-    );
+export const addMessage = async (senderId: number, recipientId: number, messageContent: string) => {
+
+    // INSERT INTO messages (sender_id, recipient_id, content) VALUES ($1, $2, $3)
+    return await db.insertInto("messages")
+    .values({
+        sender_id: senderId,
+        recipient_id: recipientId,
+        content: messageContent
+    })
+    .returning("id")
+    .executeTakeFirst()
 }

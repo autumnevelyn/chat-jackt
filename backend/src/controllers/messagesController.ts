@@ -1,30 +1,30 @@
 import { RequestHandler } from "express"
 import * as messagesService from "../services/messagesService";
+import { NewMessage } from "../types";
 
 
 export const getMessages: RequestHandler = async (req, res, next) => {
-    const { user1Id, user2Id } = req.params;
-
+    const {userId1, userId2} = req.params;
 
     try {
-      const messages = await messagesService.getMessagesBetweenUsers(user1Id, user2Id);
+      const messages = await messagesService.getMessagesBetweenUsers(parseInt(userId1), parseInt(userId2));
       res.json(messages);
     } catch (error){
-      console.error(error); // TODO: create logging middleware
-      res.status(500).json({ message: 'Internal server error' }); // TODO: Handle better errors
+      next(error);
     }
 }
 
 export const addMessage:RequestHandler = async(req, res, next) => {
+    const body: NewMessage = req.body;
+
     try {
-        const { senderId, recipientId, messageContent } = req.body;
-        await messagesService.addMessage(senderId, recipientId, messageContent);
+        const result = await messagesService.addMessage(body.sender_id, body.recipient_id, body.content);
+
         res.status(201).json({
-            // TODO: returrn this: id: messageId, 
+            newMessageId: result?.id,
             createdAt: new Date().toISOString()
         });
     } catch (error) {
-        console.error(error); // TODO: create logging middleware
-        res.status(500).json({ message: 'Internal server error' }); // TODO: Handle better errors
+        next(error);
     }
 }

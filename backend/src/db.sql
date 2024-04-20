@@ -13,15 +13,15 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- Create Messages table
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL,
-    sender_id INT REFERENCES users(id),
-    recipient_id INT REFERENCES users(id),
+    sender_id INT REFERENCES users(id) NOT NULL,
+    recipient_id INT REFERENCES users(id) NOT NULL,
     content VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT different_sender_recipient CHECK (sender_id <> recipient_id),
     PRIMARY KEY(id)
 );
 
--- Insert a new user with hashed password
+-- Insert test data
 INSERT INTO users (username, password_hash) VALUES ('test_user1', crypt('password123', gen_salt('bf')));
 INSERT INTO users (username, password_hash) VALUES ('test_user2', crypt('password321', gen_salt('bf')));
 INSERT INTO messages (sender_id, recipient_id, content) VALUES (
@@ -33,5 +33,10 @@ INSERT INTO messages (sender_id, recipient_id, content) VALUES (
 -- Quick commands
 
 -- ALTER TABLE messages ADD CONSTRAINT different_sender_recipient CHECK (sender_id <> recipient_id);
+-- DELETE FROM messages;
+-- ALTER TABLE messages 
+-- ALTER COLUMN sender_id SET NOT NULL,
+-- ALTER COLUMN recipient_id SET NOT NULL;
+
 -- DELETE FROM messages;
 -- DELETE FROM users;
