@@ -6,5 +6,8 @@ export const messagesRouter = Router();
 // get a singe message by message id
 messagesRouter.get("/:messageId", messagesController.getMessage);
 
-// send/add a new message
+// add a new message
 messagesRouter.post("/", messagesController.addMessage);
+
+// delete a message by message id
+messagesRouter.delete("/:messageId", messagesController.deleteMessage);

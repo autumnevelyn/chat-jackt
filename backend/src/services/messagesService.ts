@@ -18,3 +18,10 @@ export const addMessage = async (senderId: number, conversationId: number, messa
     .returning("id")
     .executeTakeFirstOrThrow()
 }
+
+export const deleteMessage = async (messageId: number) => {
+    return await db.deleteFrom("messages")
+    .where("id", "=", messageId)
+    .returning("id")
+    .executeTakeFirstOrThrow()
+}

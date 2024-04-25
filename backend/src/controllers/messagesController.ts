@@ -28,3 +28,17 @@ export const addMessage:RequestHandler = async(req, res, next) => {
         next(error);
     }
 }
+
+export const deleteMessage: RequestHandler = async(req, res, next) => {
+    const { messageId } = req.params;
+
+    try {
+      const result = await messagesService.deleteMessage(parseInt(messageId));
+      res.json({
+        deletedMessageId: result?.id,
+        deletedAt: new Date().toISOString()
+    });
+    } catch (error){
+      next(error);
+    }
+}
