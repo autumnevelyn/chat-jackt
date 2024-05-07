@@ -1,3 +1,4 @@
+import { time } from "console";
 import { db } from "../db";
 import { NewMessage, Message, MessageUpdate } from "../types";
 
@@ -5,6 +6,14 @@ export const getSingleMessage = async (messageId: number): Promise<Message> => {
     return await db.selectFrom("messages").selectAll()
     .where("id", "=", messageId)
     .executeTakeFirstOrThrow()
+}
+
+export const getPaginatedMessages = async (conversationId: number, lastMessageTimeStamp: Date, pageSize: number): Promise<Message[]> => {
+    return await db.selectFrom("messages").selectAll()
+    .where("conversation_id", "=", conversationId)
+    .where('created_at', '<', lastMessageTimeStamp)
+    .orderBy('created_at',"desc")
+    .limit(pageSize).execute();
 }
 
 export const addMessage = async (senderId: number, conversationId: number, messageContent: string) => {

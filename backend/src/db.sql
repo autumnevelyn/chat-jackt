@@ -95,9 +95,39 @@ INSERT INTO messages (sender_id, conversation_id, content) VALUES (
 INSERT INTO messages (sender_id, conversation_id, content) VALUES (
     (SELECT id FROM users WHERE username = 'test_user3'), (SELECT id FROM conversations WHERE title = 'test group chat'),'hello world!');
 
-   
-   
-   
+-- insert 200 test messages
+DO $$
+DECLARE 
+    i INT := 1;
+    messageContent1 VARCHAR(100);
+    messageContent2 VARCHAR(100);
+    currentTime TIMESTAMP := '2022-04-25 00:00:00'; -- Start time
+BEGIN
+    WHILE i <= 200 LOOP
+        messageContent1 := 'test message ' || i;
+        messageContent2 := 'test message ' || (i + 1);
+
+        INSERT INTO messages (sender_id, conversation_id, content, created_at) 
+        VALUES (
+            (SELECT id FROM users WHERE username = 'test_user1'), 
+            (SELECT id FROM conversations WHERE title = 'test private chat'),
+            messageContent1,
+            currentTime
+        );
+        INSERT INTO messages (sender_id, conversation_id, content, created_at) 
+        VALUES (
+            (SELECT id FROM users WHERE username = 'test_user2'), 
+            (SELECT id FROM conversations WHERE title = 'test private chat'),
+            messageContent2,
+            currentTime + interval '1 hour'
+        );
+
+        currentTime := currentTime + interval '2 hours'; -- Increment by 2 hours for each pair of messages
+        i := i + 2;
+    END LOOP;
+END $$;
+
+
 -- Quick commands
 
 -- ALTER TABLE messages ADD CONSTRAINT different_sender_recipient CHECK (sender_id <> recipient_id);

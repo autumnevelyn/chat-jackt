@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { testRouter } from "./routes/testRoutes";
 import { messagesRouter } from "./routes/messagesRoutes";
 import { usersRouter } from "./routes/usersRoutes";
+import { conversationsRouter } from "./routes/conversationsRoutes";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/test", testRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/conversations", conversationsRouter);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
