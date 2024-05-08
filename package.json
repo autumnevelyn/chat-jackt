@@ -5,6 +5,7 @@
   "main": "backend/dist/index.js",
   "scripts": {
     "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
 
   },

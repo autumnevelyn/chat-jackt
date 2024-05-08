@@ -99,13 +99,15 @@ INSERT INTO messages (sender_id, conversation_id, content) VALUES (
 DO $$
 DECLARE 
     i INT := 1;
-    messageContent1 VARCHAR(100);
-    messageContent2 VARCHAR(100);
+    messageContent1 VARCHAR(500);
+    messageContent2 VARCHAR(500);
     currentTime TIMESTAMP := '2022-04-25 00:00:00'; -- Start time
+    testText VARCHAR(500) := '. Bulbasaur resembles a small amphibian/frog, but it bears three claws on each of its feet and has no tail. It also has large, red eyes and small, sharp teeth.';
 BEGIN
     WHILE i <= 200 LOOP
-        messageContent1 := 'test message ' || i;
-        messageContent2 := 'test message ' || (i + 1);
+        messageContent1 := 'test message ' || i || testText;
+        messageContent2 := 'test message ' || (i + 1) || testText;
+       	
 
         INSERT INTO messages (sender_id, conversation_id, content, created_at) 
         VALUES (
