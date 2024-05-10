@@ -1,6 +1,6 @@
 import { Message } from "../types"
 
-export const MessageBubble = async ({message}: {message: Message}) => {
+export const MessageBubble = ({message}: {message: Message}) => {
     const sendDate = new Date(message.created_at)
 
     return(

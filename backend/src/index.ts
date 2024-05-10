@@ -4,6 +4,7 @@ import { testRouter } from "./routes/testRoutes";
 import { messagesRouter } from "./routes/messagesRoutes";
 import { usersRouter } from "./routes/usersRoutes";
 import { conversationsRouter } from "./routes/conversationsRoutes";
+import cors from "cors";
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ const port = process.env.PORT || "3000";
 
 // middleware
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000' }));
+
 
 // routers
 app.use("/api/test", testRouter);

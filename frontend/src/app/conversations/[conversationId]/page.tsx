@@ -6,6 +6,5 @@ export default ({ params }: { params: {conversationId: string} }) => (
           <h2 className="text-xl font-semibold">Conversation id {params.conversationId} </h2>
         </div>
         <ConversationMessages conversationId={params.conversationId}/>
-
   </div>
 );  
