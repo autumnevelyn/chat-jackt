@@ -1,11 +1,19 @@
-"use client"
+"use client";
 
-import { Message } from "@/types";
+import { Member, Message } from "@/types";
 import { MessageBubble } from "./MessageBubble";
 import { BACKEND_API_URL } from "@/constants";
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
-export const ConversationMessages = ({conversationId}:{conversationId: string}) => {
+interface ConversationMessagesProps {
+    conversationId: string;
+    members: Member[];
+}
+
+export const ConversationMessages: FC<ConversationMessagesProps> = ({
+    conversationId,
+    members,
+}) => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [lastMessageTimestamp, setLastMessageTimestamp] = useState<string | null>(null);
@@ -15,39 +23,41 @@ export const ConversationMessages = ({conversationId}:{conversationId: string}) 
 
     // Fetch initial batch of messages and then make sure the view is scrolled to the bottom
     useEffect(() => {
-        fetchMessages().then(()=>scrollToBottom());
+        fetchMessages().then(() => scrollToBottom());
     }, []);
 
     const fetchMessages = async () => {
-        console.debug("fetching new messages")
-        setIsFetching(true)
+        console.debug("fetching new messages");
+        setIsFetching(true);
         try {
             const url = lastMessageTimestamp
-                ? `${BACKEND_API_URL}/conversations/${conversationId}?size=${messagePageSize}&lastMessageTimeStamp=${lastMessageTimestamp}`
-                : `${BACKEND_API_URL}/conversations/${conversationId}?size=${messagePageSize}`;
+                ? `${BACKEND_API_URL}/conversations/${conversationId}/messages?size=${messagePageSize}&lastMessageTimeStamp=${lastMessageTimestamp}`
+                : `${BACKEND_API_URL}/conversations/${conversationId}/messages?size=${messagePageSize}`;
 
-            const { messages: newMessages }: { messages: Message[]} = await (await fetch(url,{method: "GET", cache: "no-store"})).json();
-            
+            const { messages: newMessages }: { messages: Message[] } = await (
+                await fetch(url, { method: "GET", cache: "no-store" })
+            ).json();
+
             if (newMessages.length > 0) {
                 const newLastMessageTimestamp = newMessages[newMessages.length - 1].created_at;
                 setLastMessageTimestamp(newLastMessageTimestamp);
                 setMessages([...messages, ...newMessages]);
             } else {
-                console.log('No more messages available.'); // TODO: handle better when end of message history is reached
+                console.log("No more messages available."); // TODO: handle better when end of message history is reached
             }
         } catch (error) {
-            console.error('Error fetching messages:', error); // TODO: probably needs better error handling too
-        }finally{
-            setIsFetching(false)
+            console.error("Error fetching messages:", error); // TODO: probably needs better error handling too
+        } finally {
+            setIsFetching(false);
         }
     };
 
     const handleScroll: React.UIEventHandler<HTMLDivElement> = (event) => {
-        if(isFetching) return; // don't fetch any more messages if we are already waiting for more
+        if (isFetching) return; // don't fetch any more messages if we are already waiting for more
 
         const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
 
-        if (Math.abs(scrollTop) + clientHeight > scrollHeight-10) {
+        if (Math.abs(scrollTop) + clientHeight > scrollHeight - 10) {
             fetchMessages();
             setIsFetching(true);
         }
@@ -59,14 +69,15 @@ export const ConversationMessages = ({conversationId}:{conversationId: string}) 
         }
     };
 
-
-    return(
-        <div ref={messagesContainerRef}  className="flex flex-col-reverse overflow-y-scroll h-full bg-gray-100 p-4 rounded-md shadow-md" onScroll={handleScroll}>
+    return (
+        <div
+            ref={messagesContainerRef}
+            className="flex flex-col-reverse overflow-y-scroll h-full bg-gray-100 p-4 rounded-md shadow-md"
+            onScroll={handleScroll}
+        >
             {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
+                <MessageBubble key={message.id} message={message} members={members} />
             ))}
         </div>
     );
-}
-
-
+};
