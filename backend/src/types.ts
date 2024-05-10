@@ -9,6 +9,8 @@ import {
 export interface Database {
     users: UserTable
     messages: MessageTable
+    conversations: ConversationTable
+    is_member: IsMemberTable
 }
 
 // Table interfaces should only be used in the `Database` type above and never as a result type of a query!

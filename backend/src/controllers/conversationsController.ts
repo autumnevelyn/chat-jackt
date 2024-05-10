@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import * as messagesService from "../services/messagesService";
+import * as conversationsService from "../services/conversationsService";
 
 
 export const getMessages: RequestHandler = async (req, res, next) => {
@@ -15,5 +16,20 @@ export const getMessages: RequestHandler = async (req, res, next) => {
     } catch (error){
       next(error);
     }
+}
+
+export const getConversationInfo: RequestHandler = async (req, res, next) => {
+  const conversationId = parseInt(req.params.conversationId);
+
+  try {
+    const convoInfo = await conversationsService.getConversationInfo(conversationId);
+    const convoMembers = await conversationsService.getConversationMembers(conversationId);
+    res.json({
+      conversation: convoInfo,
+      members: convoMembers
+    });
+  } catch (error){
+    next(error);
+  }
 }
 
