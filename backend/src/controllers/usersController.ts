@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
 import { NewUser } from "../types";
-import * as usersService from "../services/usersService"
+import * as usersService from "../services/usersService";
 
-export const createUser:RequestHandler = async(req, res, next) => {
+export const createUser: RequestHandler = async (req, res, next) => {
     const body: NewUser = req.body;
 
     try {
@@ -10,9 +10,9 @@ export const createUser:RequestHandler = async(req, res, next) => {
 
         res.status(201).json({
             newUserId: result?.id,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
         });
     } catch (error) {
         next(error);
     }
-}
+};

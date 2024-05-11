@@ -13,8 +13,7 @@ const port = process.env.PORT || "3000";
 
 // middleware
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:3000' }));
-
+app.use(cors({ origin: "http://localhost:3000" }));
 
 // routers
 app.use("/api/test", testRouter);
@@ -23,5 +22,5 @@ app.use("/api/users", usersRouter);
 app.use("/api/conversations", conversationsRouter);
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+    console.log(`[server]: Server is running at http://localhost:${port}`);
 });
